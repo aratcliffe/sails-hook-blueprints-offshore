@@ -135,19 +135,19 @@ var actionUtil = {
       var ident = assoc[assoc.type];
       var AssociatedModel = req._sails.models[ident];
 
-      if (req.options.autoWatch) {
-        AssociatedModel.watch(req);
+        if (req.options.autoWatch) {
+        AssociatedModel._watch(req);
       }
 
       // Subscribe to each associated model instance in a collection
       if (assoc.type === 'collection') {
         _.each(record[assoc.alias], function (associatedInstance) {
-          AssociatedModel.subscribe(req, associatedInstance);
+          AssociatedModel.subscribe(req, [associatedInstance[AssociatedModel.primaryKey]]);
         });
       }
       // If there is an associated to-one model instance, subscribe to it
-      else if (assoc.type === 'model' && record[assoc.alias]) {
-        AssociatedModel.subscribe(req, record[assoc.alias]);
+        else if (assoc.type === 'model' && record[assoc.alias]) {
+        AssociatedModel.subscribe(req, [record[assoc.alias][AssociatedModel.primaryKey]]);
       }
     });
   },

@@ -65,8 +65,8 @@ module.exports = function expand(req, res) {
 
       // Subcribe to instance, if relevant
       // TODO: only subscribe to populated attribute- not the entire model
-      if (sails.hooks.pubsub && req.isSocket) {
-        Model.subscribe(req, matchingRecord);
+      if (req._sails.hooks['pubsub-offshore'] && req.isSocket) {
+        Model.subscribe(req, [matchingRecord[Model.primaryKey]]);
         actionUtil.subscribeDeep(req, matchingRecord);
       }
 

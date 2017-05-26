@@ -24,6 +24,8 @@ var actionUtil = require('../actionUtil'),
 
 module.exports = function findRecords (req, res) {
 
+    console.log('blueprints findRecords');
+    
   // Look up the model
   var Model = actionUtil.parseModel(req);
 
@@ -48,9 +50,9 @@ module.exports = function findRecords (req, res) {
 
     // Only `.watch()` for new instances of the model if
     // `autoWatch` is enabled.
-    if (req._sails.hooks.pubsub && req.isSocket) {
-      Model.subscribe(req, matchingRecords);
-      if (req.options.autoWatch) { Model.watch(req); }
+    if (req._sails.hooks['pubsub-offshore'] && req.isSocket) {
+      Model.subscribe(req, _.pluck(matchingRecords, Model.primaryKey));
+      if (req.options.autoWatch) { Model._watch(req); }
       // Also subscribe to instances of all associated models
       _.each(matchingRecords, function (record) {
         actionUtil.subscribeDeep(req, record);

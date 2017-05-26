@@ -36,16 +36,16 @@ module.exports = function createRecord (req, res) {
 
 		// If we have the pubsub hook, use the model class's publish method
 		// to notify all subscribers about the created item
-		if (req._sails.hooks.pubsub) {
+		if (req._sails.hooks['pubsub-offshore']) {
 			if (req.isSocket) {
-				Model.subscribe(req, newInstance);
-				Model.introduce(newInstance);
+				Model.subscribe(req, [newInstance[Model.primarykey]]);
+				Model._introduce(newInstance);
 			}
 			// Make sure data is JSON-serializable before publishing			
 			var publishData = _.isArray(newInstance) ? 
 								_.map(newInstance, function(instance) {return instance.toJSON();}) : 
 								newInstance.toJSON();
-			Model.publishCreate(publishData, !req.options.mirror && req);
+			Model._publishCreate(publishData, !req.options.mirror && req);
 		}
 
 		// Send JSONP-friendly response if it's supported
