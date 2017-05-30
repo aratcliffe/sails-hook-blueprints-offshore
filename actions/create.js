@@ -38,7 +38,7 @@ module.exports = function createRecord (req, res) {
 		// to notify all subscribers about the created item
 		if (req._sails.hooks['pubsub-offshore']) {
 			if (req.isSocket) {
-				Model.subscribe(req, [newInstance[Model.primarykey]]);
+				Model.subscribe(req, [newInstance[Model.primaryKey]]);
 				Model._introduce(newInstance);
 			}
 			// Make sure data is JSON-serializable before publishing			
